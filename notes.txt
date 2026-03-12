@@ -1,0 +1,63 @@
+Extensions=[SQLite, SQLite viewer, material icons, C#, C# dev-kit, solution (like VS)]
+Packages = [EFCore.Design, EFCore.Sqlite]
+  
+setx DOTNET_CLI_TELEMETRY_OPTOUT 1
+
+dotnet new list
+
+dotnet new webapi -h //-h contextual help
+
+dotnet new sln // dotnet project container - solution file from template
+
+dotnet new webapi -controllers -n API // webapi is template "API" is name we want use
+
+dotnet sln add API //add project to Solution
+
+dotnet sln list // check if project
+ added
+
+launchsetting.json ---> init file for project
+
+models is entities in C#, vice-verse models=entities
+
+Entity Framewrok = ORM = Translate code into SQL cmds for db opx.
+
+[Querying, change tracking, saving, concurrecy, transaction, caching(L-1), Bulit-in conventions, configs, migrations] code-first or db-first (migrations)
+
+DbContext (provided by EF) -> class --> main bridge b/w our entities and the DB.
+
+LINQ queries. 
+
+DbContext.Users.Add(new User{id=4, name="John"}) ->DB provider(sqlite, postgres, sql server)-> INSERT INTO USERS (ID,Name) Values(4,John)
+
+dotnet restore // to refresh - if packages (nuget) changed
+
+-->Create API/Data --->AppDbContext.cs (DbContext Class) 
+// Data folder for all Data Access Related code
+
+Derived class : Derived from class
+
+public class AppDbContext : DbContext (UoW, Repo pattern //Provides abstraction from DB)--> provide with DBContextOptions to set conn String, etc.
+
+// public DbSet<AppUser> Users { get; set; } //Users will be the table name in Db
+
+Register DbContext in Program.cs as a service.
+add connection string in appsettings.json //configuration after logging
+
+-> Run EF Migrations
+
+dotnet tool list -g 
+dotnet tool install -g dotnet-ef // tool for migrations
+dotnet ef // tool help
+
+dotnet ef migrations add <Migration Name> -o Data/Migrations
+dotnet ef migrations add InitialCreate -o Data/Migrations //-o output folder
+
+-------CREATE OUR DB NOW------------
+dotnet ef database update
+
+create APIs in Controller. RULE: <ControllerName>sController e.g.: MembersController
+
+NOTE: Any Service added in Program.cs are made available to use for Dependency Injection.
+
+
