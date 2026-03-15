@@ -60,4 +60,67 @@ create APIs in Controller. RULE: <ControllerName>sController e.g.: MembersContro
 
 NOTE: Any Service added in Program.cs are made available to use for Dependency Injection.
 
+-------------ANGULAR SKELETON--------------
+Extensions:[Angular Language, ESLint]
+npm install -g @angular/cli
+ng version
+
+ng new client //client is project name
+ng serve // to build and run
+
+-index.html is default access page/ entry point page to any website.
+-index.html has <app-root>
+-the angular app renders in the app-root>
+-any linked components are rendered where/in <router-outlet></router-outlet>
+-app is a component.
+
+@component({
+selector:'app-root', //name how should it be called for use n html
+imports:[array of imports],
+templateUrl: './app.html', //the name of html file with view
+styleUrl: './app.css' // the css file for that view
+})
+
+protected means also available to class children
+"main.ts" --> ENTRY point of Angular application
+
+linked editing vscode setting- for matching bracket.
+developer reload window -> vscode refresh
+
+provide to whole anglar app-. Use app.config.
+
+provide HttpsClient module for talking to server- provideHttpClient()
+
+=> methods to inject dependency in a component class:
+1. private http = inject(HttpClient)
+2. ctor(private http:HttpClient){} //OLD style
+
+-> start with implementing ngOnInit=> class App implements OnInit
+-> ngOnInit():void {} //things to-be performed at the start of appln
+ctor vs ngOnIt() decide
+
+http requests return Observable and we subscribe to it. [next, error, complete] => thus it auto unsubscribes
+
+
+But for Observable streaming events -> use unsubscribe()
+@for (member of members; track member.id) instead of *ngFor
+
+-> reactive meaning that it responds to changes. 
+
+ANGULAR SIGNALS instead of Zone.js for change detection and tracking
+e.g.: 
+protected members = signal<any>([]); has a set and get method; members.set(values)
+members() //use in html calls members.get() internally 
+
+better use function with and call it async in ngOnInit(
+	this.members.set(await this.getMembers())
+)
+
+promises are not stream of data. and we don't subscribe to it.
+
+Add Tailwind css from its page and daisy UI. 
+Once you add Tailwind CSS generic does not work(h1, ul) but replaced by tailwind classes
+
+add cert in ssl folder in angular and supply via angular.json in serve -options. use make cert for local CA.
+----------------------Skeleton Done----------------
 
