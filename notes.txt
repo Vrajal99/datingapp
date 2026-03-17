@@ -123,4 +123,52 @@ Once you add Tailwind CSS generic does not work(h1, ul) but replaced by tailwind
 
 add cert in ssl folder in angular and supply via angular.json in serve -options. use make cert for local CA.
 ----------------------Skeleton Done----------------
+Auth, DTO, JWT, DRY - Inheritance | ASP.NET Identity
+Serivices in c#, extension methods
 
+Where do i start -> requirements (User Should be statements)
+password hashing -> same password = same hash -> add SALTING
+
+after upfdating any entity: "dotnet ef migrations add UserEntityUpdated" UserEntityUpdated is a txt message
+
+ALWAYS UPDATE DB AFTER MIGRATIONS: dotnet ef database update
+BaseAPi controller, derive future controllers from this rather than ControllerBase everywhere for DRY.
+public class AccountController(AppDbContext context) : BaseApiController
+
+public async Task<ActionResult<AppUser>> Register(string email, string displayName, string password) // Params received as queryString not in Body
+but use DTO.
+
+context.Users.AnyAsync(x=>x.Email.ToLower()== email.ToLower());
+
+dotnet ef database drop //drop db
+
+------------JWT----------- [header(algo, type), payload(claim), sign]
+
+claims - nbf = notbefore
+claims - exp = expires
+calims - iat = issued at
+
+Service = treate something as a service if it doesn't access our database or 3rd party service
+			   ||			|| 
+Implementation || Interface || Usage(use, test, share, show structure to use)
+			   ||			|| 
+
+Interface hides implementation just tells us what method you need to implement, what would that method accept as parameters and what it would return.
+
+add service to Program.cs
+use interface for DI. Inject IConfiguration to access Environment or config vars in a service class
+
+var tokenKey = config["TokenKey"]; // from appsettings.json
+var tokenKey = config["TokenKey"] ?? throw new Exception("Cannot get token key"); // ?? is null coalescing operator; if condition on left fails use right
+
+Symmettric means use same key to encrypt and decrypt. 
+Claims: Email, UserEntityUpdated
+Then add authentication serivce in Program.cs (pkg: jwtBearer-> AddAuthentication()); then add to middleware
+
+Extension methods: are written in "public static class AppUserExtensions" | contains public STATIC extension methods.
+
+Static=> no need to instantiate class obeject using "new" when using it.
+
+Cannot use dependency injection in Static classes, so use parameters.
+
+public static UserDto ToDto(this AppUser user, ITokenService tokenService) IMPORTANT ===> as we add this, it mentions  the class that we are extending. Thus when use in the main class. it is called on the class object and only parameters except for the "this" needs to be passed. <=== IMPORTANT
