@@ -161,14 +161,102 @@ use interface for DI. Inject IConfiguration to access Environment or config vars
 var tokenKey = config["TokenKey"]; // from appsettings.json
 var tokenKey = config["TokenKey"] ?? throw new Exception("Cannot get token key"); // ?? is null coalescing operator; if condition on left fails use right
 
-Symmettric means use same key to encrypt and decrypt. 
+Symmetric means use same key to encrypt and decrypt. 
 Claims: Email, UserEntityUpdated
 Then add authentication serivce in Program.cs (pkg: jwtBearer-> AddAuthentication()); then add to middleware
 
 Extension methods: are written in "public static class AppUserExtensions" | contains public STATIC extension methods.
 
-Static=> no need to instantiate class obeject using "new" when using it.
+Static=> no need to instantiate class object using "new" when using it.
 
 Cannot use dependency injection in Static classes, so use parameters.
 
 public static UserDto ToDto(this AppUser user, ITokenService tokenService) IMPORTANT ===> as we add this, it mentions  the class that we are extending. Thus when use in the main class. it is called on the class object and only parameters except for the "this" needs to be passed. <=== IMPORTANT
+
+Angular Structure /ref Angular Style guide in doc:
+src/app - with app specific components
+src/layout - comp. related to layout eg: navbar 
+src/features - like members/accounts etc related components
+src/core - services
+src/shared - shared comps, used by more than one comp/feature
+---------------------------
+Project style guide LIFT principle: 
+Locate - location of the folder
+Identify - proper names to what it does
+Flat - keep it flat meaning no sub dirs
+Try to be DRY - Dont Repeat Yourself
+-----------------
+ng generate --help
+ng g c // g= generate , c= component
+ng g c nav --dry-run // --dry-run won't make changes just show where it create components. 
+ 
+UPDATE "schematics" in Angular.json to skip-tests:true/false or a root=src
+
+same for services too
+
+add components in app.html where needed in design
+
+flexboggy.com //learn flex
+flex flex-row //move row-ward
+flex flex-col //move col-ward
+daisy ui gives theming
+
+flex when used alone is default row-ward
+---------
+ng g service [name]           Creates a new service in your project. Services are used to encapsulate reusable logic, such as data access, API calls, or utility functions. This schematic simplifies   
+                                the process of generating a new service with the necessary files and boilerplate code.       
+daisyUI is pure html/css
+
+Angular control statement
+@if<condition>{<html>}@else{}
+
+Events in any tag => (click)="logout()"
+
+Observables and signals:
+Observables are lazy collections of multiple values over time -> if not subscribed nothing will be produced -> newsletter example. TO STOP -> UNSUBSCRIBE
+
+PROMISE (async,single-value(res or error), not-lazy, can't cancel, will give a val) vs observable(cancellable, streaming, transform with map, filter, reduce, with RxJS eg:http; only works if subscribed else nothing-lazy); 
+
+or use toPromise(), if return a promise instead of subscribe.
+
+-> subscribe has 3 parts (next action to do as data arrive, error, onComplete action) // HTTP are always complete so no unsubscribe needed. 
+
+ASYN PIPE: in the html/template directly and no need for sub or unsub. " service.getMembers()| async"
+
+vs SIGNALS [state management] not used with async. ==> notify components similar to useState hooks in React -> notifying all of its consumers. are getter function means call them to get value.
+E.g.: count = signal(0) ; console.log(count()) | also count.set(value) or count.update(value=> value + 2)
+
+-> performance, reevalute when dependencies change, auto-cleanup
+-> synchronous state change - predictable
+
+currentUser = signal<User | null>(null); the pipe is union operator could user type or null.
+
+.pipe()
+.tap() allows use to see incomning data without actually disturbing the stream
+
+#Browsers persistence local storage
+
+localStorage.setItem('user', JSON.stringify(user)); 
+localStorage.removeItem('user');
+
+
+@if (accountService.currentUser(); as user) //html
+
+!! Refer Angular Design Style in its docs !!
+
+ANGULAR COMPONENT COMMUNICATION -
+|- Parent to child component:
+	-1. using decorators - @Input({ required: true }) membersFromApp: User[] = []; // @ means its a decorator, 		declare passed value in parent html comp. on child-element -> in app.html in <app-home 				[membersFromApp]="members" />  syntax: [var_name_in_child]="var_name_in_parent()" () if its a 			signal.
+
+	- 2. using signal - membersFromHome=input.required<User[]>(); //input is input-signal declared in 		child comp. [membersFromHome]="membersFromApp" in parent-html 
+
+<<< app->home->register >>>
+================================================================
+|- Child to parent component:
+	decorator is old so SHIFT to USING SIGNALS, 
+	e.g.:  cancelRegister = output<type>() //output is from angular signals // Output to notify parent 	component (Home) about 	cancellation as boolean value. it has an "emit" EVENT -> cancelRegister.emit(value)
+
+parent catching it => <app-register [membersFromHome]="membersFromApp" (cancelRegister)="showRegister($event)"> $evetn is its type bcoz its an event
+
+
+
